@@ -1,9 +1,9 @@
 # 📖 Wikipedia QA Chatbot
-### NLP Course Project — Practical 08 + Practical 09
+### NLP Course Project 
 
 A unified, transformer-powered Wikipedia QA Chatbot that combines:
-- **P08** — Chatbot / QA System with BERT-based intent detection
-- **P09** — Text Summarization using HuggingFace (BART + T5) with ROUGE evaluation
+- **1** — Chatbot / QA System with BERT-based intent detection
+- **2** — Text Summarization using HuggingFace (BART + T5) with ROUGE evaluation
 
 ---
 
