@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Virtual environments
+venv/
+env/
+.env
+.venv/
+
+# Model weights (large files — train locally with train_intent_model.py)
+models/
+
+# Gradio cache
+gradio_cached_examples/
+flagged/
+
+# Logs
+*.log
