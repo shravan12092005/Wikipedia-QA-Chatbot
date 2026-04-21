@@ -28,89 +28,124 @@ print("\n✅ All models ready. Launching Gradio...\n")
 
 # ── Custom CSS ────────────────────────────────────────────────────────────────
 CUSTOM_CSS = """
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 * { box-sizing: border-box; font-family: 'Inter', sans-serif !important; }
 
 body, .gradio-container {
-    background: #0b0d17 !important;
+    background: #0c0e1a !important;
     color: #e2e8f0 !important;
 }
 
-/* ── Header ── */
-.wikiqa-header {
-    background: linear-gradient(135deg, #6d28d9 0%, #4f46e5 50%, #0ea5e9 100%);
-    border-radius: 16px;
-    padding: 20px 28px;
-    margin-bottom: 16px;
-    text-align: center;
-}
-.wikiqa-header h1 {
-    font-size: 1.9rem;
-    font-weight: 800;
-    color: #fff;
-    margin: 0 0 4px 0;
-    letter-spacing: -0.5px;
-}
-.wikiqa-header p {
-    font-size: 0.82rem;
-    color: rgba(255,255,255,0.8);
-    margin: 0;
-    font-weight: 400;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-}
+footer { display: none !important; }
+.gr-examples { display: none !important; }
+.gr-button-secondary { display: none !important; }
+.message-avatar img { width: 28px !important; height: 28px !important; }
 
-/* ── Sidebar cards ── */
-.sidebar-card {
-    background: #141625;
-    border: 1px solid #1e2235;
+/* ── Top bar ── */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #10121f;
+    border: 1px solid #1c2040;
     border-radius: 14px;
-    padding: 16px 18px;
-    margin-bottom: 12px;
+    padding: 14px 22px;
+    margin-bottom: 16px;
 }
-.sidebar-logo {
-    text-align: center;
-    padding: 18px 0 14px 0;
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
-.sidebar-logo .wiki-icon {
-    width: 56px; height: 56px;
-    background: linear-gradient(135deg, #6d28d9, #4f46e5);
-    border-radius: 14px;
+.topbar-icon {
+    width: 36px; height: 36px;
+    background: #3c3489;
+    border-radius: 8px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.6rem;
-    margin-bottom: 8px;
-}
-.sidebar-logo h2 {
     font-size: 1.1rem;
-    font-weight: 700;
-    color: #fff;
-    margin: 0;
+    flex-shrink: 0;
 }
-.sidebar-logo p {
+.topbar-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ede9fe;
+    margin: 0;
+    line-height: 1.2;
+}
+.topbar-subtitle {
     font-size: 0.72rem;
     color: #6b7280;
-    margin: 2px 0 0 0;
-    letter-spacing: 0.5px;
+    margin: 0;
+    line-height: 1.2;
+}
+.topbar-pills {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.status-pill {
+    background: #064e3b;
+    color: #34d399;
+    border: 1px solid #065f46;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+/* ── Sidebar / Panel cards ── */
+.sidebar-card {
+    background: #10121f;
+    border: 1px solid #1c2040;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
 }
 .card-label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: #6b7280;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #4b5563;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
+    letter-spacing: 1.2px;
+    margin-bottom: 10px;
 }
+
+/* ── Topic card ── */
 .topic-chip {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
     font-size: 0.88rem;
     font-weight: 600;
     color: #c4b5fd;
+    line-height: 1.3;
 }
+.topic-dot {
+    width: 8px; height: 8px;
+    background: #534AB7;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.topic-wc {
+    font-size: 0.72rem;
+    color: #6b7280;
+    margin-top: 5px;
+    padding-left: 15px;
+}
+.topic-link {
+    display: block;
+    color: #7c6ff7;
+    text-decoration: none;
+    font-size: 0.72rem;
+    margin-top: 6px;
+    padding-left: 15px;
+}
+.topic-link:hover { color: #a5b4fc; }
+
+/* ── Intent card ── */
 .badge {
     display: inline-block;
     padding: 3px 12px;
@@ -118,94 +153,70 @@ body, .gradio-container {
     font-size: 0.75rem;
     font-weight: 600;
 }
-.badge-greeting        { background: rgba(99,102,241,0.2);  color: #a5b4fc; }
-.badge-topic_request   { background: rgba(139,92,246,0.2);  color: #c4b5fd; }
-.badge-question_answering { background: rgba(14,165,233,0.2); color: #7dd3fc; }
-.badge-summarization   { background: rgba(16,185,129,0.2);  color: #6ee7b7; }
-.badge-farewell        { background: rgba(245,158,11,0.2);  color: #fcd34d; }
-.badge-default         { background: rgba(107,114,128,0.2); color: #9ca3af; }
+.badge-greeting          { background: rgba(99,102,241,0.18);  color: #a5b4fc; border: 1px solid rgba(99,102,241,0.3); }
+.badge-topic_request     { background: rgba(83,74,183,0.2);    color: #c4b5fd; border: 1px solid rgba(83,74,183,0.35); }
+.badge-question_answering{ background: rgba(83,74,183,0.2);    color: #c4b5fd; border: 1px solid rgba(83,74,183,0.35); }
+.badge-summarization     { background: rgba(16,185,129,0.15);  color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+.badge-farewell          { background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }
+.badge-default           { background: rgba(107,114,128,0.1);  color: #6b7280; border: 1px solid rgba(107,114,128,0.2); }
 
-.confidence-row {
+.conf-label-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 10px;
+    margin-bottom: 4px;
 }
-.confidence-bar-track {
-    flex: 1;
-    background: #1e2235;
+.conf-label { font-size: 0.7rem; color: #6b7280; }
+.conf-pct   { font-size: 0.7rem; font-weight: 700; color: #a5b4fc; }
+.conf-track {
+    width: 100%;
+    height: 4px;
+    background: #0c0e1a;
     border-radius: 4px;
-    height: 6px;
-    margin: 0 10px;
     overflow: hidden;
 }
-.confidence-bar-fill {
-    height: 6px;
+.conf-fill {
+    height: 4px;
+    background: #534AB7;
     border-radius: 4px;
-    background: linear-gradient(90deg, #6d28d9, #0ea5e9);
     transition: width 0.4s ease;
 }
-.confidence-pct {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: #a5b4fc;
-    min-width: 38px;
-    text-align: right;
-}
 
-.stat-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 0;
-    font-size: 0.8rem;
-    color: #9ca3af;
-    border-bottom: 1px solid #1e2235;
+/* ── Stats grid ── */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
 }
-.stat-row:last-child { border-bottom: none; }
-.stat-row span:last-child {
+.stat-box {
+    background: #0c0e1a;
+    border-radius: 8px;
+    padding: 10px 10px 8px 10px;
+    text-align: center;
+}
+.stat-num {
+    font-size: 1.25rem;
     font-weight: 700;
     color: #e2e8f0;
+    line-height: 1;
+}
+.stat-lbl {
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #374151;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
 }
 
-.rouge-card {
-    background: #141625;
-    border: 1px solid #065f46;
-    border-radius: 14px;
-    padding: 16px 18px;
-    margin-bottom: 12px;
-}
-.rouge-card .card-label { color: #34d399; }
-.rouge-metric-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 0;
-    font-size: 0.78rem;
-    border-bottom: 1px solid #1e2235;
-}
-.rouge-metric-row:last-child { border-bottom: none; }
-.rouge-label { color: #9ca3af; font-weight: 500; }
-.rouge-val-bart { color: #60a5fa; font-weight: 700; }
-.rouge-val-t5   { color: #fb923c; font-weight: 700; }
-.winner-badge {
-    display: inline-block;
-    background: rgba(16,185,129,0.2);
-    color: #34d399;
-    border: 1px solid #065f46;
-    border-radius: 20px;
-    padding: 3px 14px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    margin-top: 10px;
-}
-
+/* ── Clear button ── */
 .clear-btn {
     width: 100%;
-    background: #1e2235 !important;
-    color: #9ca3af !important;
-    border: 1px solid #2d3148 !important;
-    border-radius: 10px !important;
+    background: #0c0e1a !important;
+    color: #6b7280 !important;
+    border: 1px solid #1c2040 !important;
+    border-radius: 8px !important;
     font-size: 0.82rem !important;
     font-weight: 500 !important;
     padding: 10px !important;
@@ -213,52 +224,190 @@ body, .gradio-container {
     transition: all 0.2s;
 }
 .clear-btn:hover {
-    background: #272a40 !important;
+    background: #10121f !important;
     color: #e2e8f0 !important;
-    border-color: #3d4265 !important;
+    border-color: #3c3489 !important;
 }
 
 /* ── Chatbot ── */
 #chatbot {
     background: #0f111e !important;
-    border: 1px solid #1e2235 !important;
-    border-radius: 16px !important;
-    min-height: 460px;
+    border: 1px solid #1c2040 !important;
+    border-radius: 14px !important;
+    min-height: 480px;
+}
+#chatbot .message.user {
+    background: #3c3489 !important;
+    color: #ede9fe !important;
+    border-radius: 14px 14px 4px 14px !important;
+    font-size: 0.88rem;
 }
 #chatbot .message.bot {
-    background: #141625 !important;
-    border: 1px solid #1e2235 !important;
-    border-radius: 14px 14px 14px 4px !important;
-    color: #e2e8f0 !important;
+    background: #13172b !important;
+    color: #d1d5db !important;
+    border: 1px solid #1c2040 !important;
+    border-radius: 4px 14px 14px 14px !important;
     font-size: 0.88rem;
     line-height: 1.6;
 }
-#chatbot .message.user {
-    background: linear-gradient(135deg, #6d28d9, #4f46e5) !important;
-    border-radius: 14px 14px 4px 14px !important;
-    color: #fff !important;
-    font-size: 0.88rem;
+
+/* ── Input ── */
+#user-input textarea {
+    background: #13172b !important;
+    border: 1px solid #1c2040 !important;
+    border-radius: 10px !important;
+    color: #e2e8f0 !important;
+    font-size: 0.88rem !important;
+    resize: none;
 }
-#chatbot .message.bot .summary-grid {
+#user-input textarea:focus {
+    border-color: #534AB7 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(83,74,183,0.2) !important;
+}
+#send-btn {
+    background: #3c3489 !important;
+    color: #ede9fe !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    height: 44px !important;
+    padding: 0 22px !important;
+    transition: all 0.2s !important;
+}
+#send-btn:hover {
+    background: #534AB7 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(83,74,183,0.35) !important;
+}
+
+/* ── Quick pick chips ── */
+.chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 10px;
+}
+.chip {
+    background: #13172b;
+    border: 1px solid #1c2040;
+    color: #6b7280;
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    user-select: none;
+}
+.chip:hover {
+    background: #1c2040;
+    color: #a5b4fc;
+    border-color: #3730a3;
+}
+
+/* ── ROUGE right panel ── */
+.rouge-panel {
+    background: #0a1a12;
+    border: 1px solid #064e3b;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+}
+.rouge-panel .card-label { color: #065f46; }
+.rouge-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    margin-top: 4px;
+}
+.rouge-table th {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 4px 0;
+    border-bottom: 1px solid #064e3b;
+}
+.rouge-table th:first-child { text-align: left; color: #6b7280; }
+.rouge-table th.col-bart { text-align: right; color: #60a5fa; }
+.rouge-table th.col-t5   { text-align: right; color: #fb923c; }
+.rouge-table td { padding: 5px 0; border-bottom: 1px solid #0d2a1c; }
+.rouge-table td:first-child { color: #9ca3af; }
+.rouge-table td.val-bart { text-align: right; color: #60a5fa; font-weight: 700; }
+.rouge-table td.val-t5   { text-align: right; color: #fb923c; font-weight: 700; }
+.rouge-table tr:last-child td { border-bottom: none; }
+.rouge-avg-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+.rouge-avg-label { font-size: 0.72rem; color: #6b7280; }
+.winner-pill {
+    display: inline-block;
+    background: rgba(16,185,129,0.15);
+    color: #34d399;
+    border: 1px solid #065f46;
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+/* ── Model info card ── */
+.model-row {
+    padding: 7px 0;
+    border-bottom: 1px solid #1c2040;
+}
+.model-row:last-child { border-bottom: none; }
+.model-name {
+    font-family: 'Courier New', monospace !important;
+    font-size: 0.75rem;
+    color: #c4b5fd;
+    font-weight: 600;
+}
+.model-role {
+    font-size: 0.68rem;
+    color: #4b5563;
+    margin-top: 2px;
+}
+
+/* ── How to use card ── */
+.how-step {
+    display: flex;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+.how-step-num {
+    font-weight: 700;
+    color: #534AB7;
+    flex-shrink: 0;
+    width: 14px;
+}
+
+/* ── Summary cards ── */
+.summary-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     margin-top: 12px;
 }
 .sum-card-bart {
-    background: rgba(14,165,233,0.07);
+    background: rgba(14,165,233,0.06);
     border: 1px solid #0ea5e9;
     border-radius: 12px;
     padding: 12px;
 }
 .sum-card-t5 {
-    background: rgba(251,146,60,0.07);
+    background: rgba(251,146,60,0.06);
     border: 1px solid #fb923c;
     border-radius: 12px;
     padding: 12px;
 }
 .sum-card-title {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -267,150 +416,190 @@ body, .gradio-container {
 .sum-card-bart .sum-card-title { color: #7dd3fc; }
 .sum-card-t5   .sum-card-title { color: #fdba74; }
 .sum-card-body {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     color: #cbd5e1;
     line-height: 1.55;
 }
-
-/* ── Input ── */
-#user-input textarea {
-    background: #141625 !important;
-    border: 1px solid #2d3148 !important;
-    border-radius: 12px !important;
-    color: #e2e8f0 !important;
-    font-size: 0.88rem !important;
-    resize: none;
-}
-#user-input textarea:focus {
-    border-color: #6d28d9 !important;
-    outline: none !important;
-    box-shadow: 0 0 0 3px rgba(109,40,217,0.2) !important;
-}
-#send-btn {
-    background: linear-gradient(135deg, #6d28d9, #4f46e5) !important;
-    color: #fff !important;
-    border: none !important;
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    font-size: 0.88rem !important;
-    height: 44px !important;
-    padding: 0 24px !important;
-    transition: all 0.2s !important;
-}
-#send-btn:hover {
-    background: linear-gradient(135deg, #7c3aed, #6366f1) !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(109,40,217,0.4) !important;
-}
-
-.divider { border: none; border-top: 1px solid #1e2235; margin: 10px 0; }
 """
 
 # ── HTML Render Helpers ───────────────────────────────────────────────────────
-LOGO_HTML = """
-<div class="sidebar-logo">
-  <div class="wiki-icon">📖</div>
-  <h2>WikiQA Bot</h2>
-  <p>NLP Course Project</p>
-</div>
-"""
 
-def render_topic_card(title: str, url: str = "", word_count: int = 0) -> str:
-    title_display = title if title else "—"
-    wc_text = f"<span style='font-size:0.72rem;color:#6b7280;display:block;margin-top:4px'>{word_count:,} words</span>" if word_count > 0 else ""
-    link = f"<a href='{url}' target='_blank' style='color:#6366f1;text-decoration:none;font-size:0.7rem'>🔗 View on Wikipedia</a>" if url else ""
-    return f"""
-<div class="sidebar-card">
-  <div class="card-label">📄 Current Topic</div>
-  <div class="topic-chip">🌐 {title_display}</div>
-  {wc_text}
-  {link}
-</div>
-"""
-
-def render_intent_card(intent: str, confidence: float) -> str:
-    badge_class = f"badge-{intent}" if intent != "—" else "badge-default"
-    intent_display = intent.replace("_", " ").title() if intent != "—" else "—"
-    conf_pct = confidence if confidence else 0
-    fill_width = int(conf_pct)
-    conf_display = f"{conf_pct}%" if conf_pct else "—"
-    return f"""
-<div class="sidebar-card">
-  <div class="card-label">🧠 Intent Detected</div>
-  <span class="badge {badge_class}">{intent_display}</span>
-  <div class="confidence-row" style="margin-top:10px">
-    <span style="font-size:0.72rem;color:#6b7280">Confidence</span>
-    <div class="confidence-bar-track">
-      <div class="confidence-bar-fill" style="width:{fill_width}%"></div>
+TOP_BAR_HTML = """
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-icon">📖</div>
+    <div>
+      <p class="topbar-title">WikiQA Bot</p>
+      <p class="topbar-subtitle">NLP Course Project — Practical 08 + 09</p>
     </div>
-    <span class="confidence-pct">{conf_display}</span>
+  </div>
+  <div class="topbar-pills">
+    <span class="status-pill">● BERT Ready</span>
+    <span class="status-pill">● BART Ready</span>
+    <span class="status-pill">● T5 Ready</span>
   </div>
 </div>
 """
 
-def render_stats_card(questions: int, summaries: int, articles: int) -> str:
-    return f"""
-<div class="sidebar-card">
-  <div class="card-label">📊 Session Stats</div>
-  <div class="stat-row"><span>📰 Articles Fetched</span><span>{articles}</span></div>
-  <div class="stat-row"><span>❓ Questions Asked</span><span>{questions}</span></div>
-  <div class="stat-row"><span>📝 Summaries Done</span><span>{summaries}</span></div>
+CHIPS_HTML = """
+<div class="chips-row">
+  <span class="chip" onclick="(function(){var t=document.querySelector('#user-input textarea');if(t){t.value='Hello!';t.dispatchEvent(new Event('input',{bubbles:true}));}})()">Hello!</span>
+  <span class="chip" onclick="(function(){var t=document.querySelector('#user-input textarea');if(t){t.value='Tell me about Einstein';t.dispatchEvent(new Event('input',{bubbles:true}));}})()">Tell me about Einstein</span>
+  <span class="chip" onclick="(function(){var t=document.querySelector('#user-input textarea');if(t){t.value='When was he born?';t.dispatchEvent(new Event('input',{bubbles:true}));}})()">When was he born?</span>
+  <span class="chip" onclick="(function(){var t=document.querySelector('#user-input textarea');if(t){t.value='Summarize it';t.dispatchEvent(new Event('input',{bubbles:true}));}})()">Summarize it</span>
+  <span class="chip" onclick="(function(){var t=document.querySelector('#user-input textarea');if(t){t.value='Goodbye!';t.dispatchEvent(new Event('input',{bubbles:true}));}})()">Goodbye!</span>
 </div>
 """
+
+MODEL_INFO_HTML = """
+<div class="sidebar-card">
+  <div class="card-label">Models Used</div>
+  <div class="model-row">
+    <div class="model-name">bert-base-uncased</div>
+    <div class="model-role">Intent Detection</div>
+  </div>
+  <div class="model-row">
+    <div class="model-name">roberta-base-squad2</div>
+    <div class="model-role">Question Answering</div>
+  </div>
+  <div class="model-row">
+    <div class="model-name">bart-large-cnn &amp; t5-small</div>
+    <div class="model-role">Summarization</div>
+  </div>
+</div>
+"""
+
+HOW_TO_USE_HTML = """
+<div class="sidebar-card">
+  <div class="card-label">How to Use</div>
+  <div class="how-step"><span class="how-step-num">1</span><span>Search: <em>"Tell me about Einstein"</em></span></div>
+  <div class="how-step"><span class="how-step-num">2</span><span>Ask: <em>"When was he born?"</em></span></div>
+  <div class="how-step"><span class="how-step-num">3</span><span>Summarize: <em>"Summarize it"</em></span></div>
+  <div class="how-step"><span class="how-step-num">4</span><span>Bye: <em>"Goodbye"</em></span></div>
+</div>
+"""
+
+
+def render_topic_card(title: str, url: str = "", word_count: int = 0) -> str:
+    title_display = title if title else "—"
+    dot = '<span class="topic-dot"></span>' if title else '<span class="topic-dot" style="background:#374151"></span>'
+    wc_html = f'<div class="topic-wc">{word_count:,} words</div>' if word_count > 0 else ""
+    link_html = f'<a class="topic-link" href="{url}" target="_blank">View on Wikipedia →</a>' if url else ""
+    return f"""
+<div class="sidebar-card">
+  <div class="card-label">Current Topic</div>
+  <div class="topic-chip">{dot}<span>{title_display}</span></div>
+  {wc_html}
+  {link_html}
+</div>
+"""
+
+
+def render_intent_card(intent: str, confidence: float) -> str:
+    badge_class = f"badge-{intent}" if intent not in ("—", "") else "badge-default"
+    intent_display = intent.replace("_", " ").title() if intent not in ("—", "") else "—"
+    conf_pct = confidence if confidence else 0
+    fill_width = int(conf_pct)
+    conf_display = f"{conf_pct:.0f}%" if conf_pct else "—"
+    return f"""
+<div class="sidebar-card">
+  <div class="card-label">Intent Detected</div>
+  <span class="badge {badge_class}">{intent_display}</span>
+  <div class="conf-label-row">
+    <span class="conf-label">Confidence</span>
+    <span class="conf-pct">{conf_display}</span>
+  </div>
+  <div class="conf-track">
+    <div class="conf-fill" style="width:{fill_width}%"></div>
+  </div>
+</div>
+"""
+
+
+def render_stats_card(questions: int, summaries: int, articles: int, avg_conf: float = 0.0) -> str:
+    avg_display = f"{avg_conf:.0f}%" if avg_conf else "—"
+    return f"""
+<div class="sidebar-card">
+  <div class="card-label">Session Stats</div>
+  <div class="stats-grid">
+    <div class="stat-box">
+      <div class="stat-num">{articles}</div>
+      <div class="stat-lbl">Articles Fetched</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">{questions}</div>
+      <div class="stat-lbl">Questions Asked</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">{summaries}</div>
+      <div class="stat-lbl">Summaries Done</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">{avg_display}</div>
+      <div class="stat-lbl">Avg Confidence</div>
+    </div>
+  </div>
+</div>
+"""
+
 
 def render_rouge_card(rouge_scores: dict, winner: str = "") -> str:
     if not rouge_scores:
         return """
-<div class="rouge-card">
-  <div class="card-label">📈 ROUGE Scores</div>
-  <div style="color:#6b7280;font-size:0.8rem;text-align:center;padding:12px 0">
+<div class="rouge-panel">
+  <div class="card-label">Rouge Scores</div>
+  <div style="color:#4b5563;font-size:0.8rem;text-align:center;padding:16px 0">
     Summarize an article to see scores
   </div>
 </div>
 """
     bart = rouge_scores.get("bart", {})
     t5   = rouge_scores.get("t5",   {})
-    r1b  = bart.get("rouge1", 0)
-    r2b  = bart.get("rouge2", 0)
-    rlb  = bart.get("rougeL", 0)
-    r1t  = t5.get("rouge1", 0)
-    r2t  = t5.get("rouge2", 0)
-    rlt  = t5.get("rougeL", 0)
-    winner_html = f'<div class="winner-badge">🏆 {winner} Wins</div>' if winner and winner != "Tie" else '<div class="winner-badge">🤝 Tie</div>'
+    r1b  = bart.get("rouge1", 0); r2b = bart.get("rouge2", 0); rlb = bart.get("rougeL", 0)
+    r1t  = t5.get("rouge1",   0); r2t = t5.get("rouge2",   0); rlt = t5.get("rougeL",  0)
+
+    # Winner chip
+    if winner == "Tie" or not winner:
+        winner_chip = '<span class="winner-pill">Tie</span>'
+    else:
+        winner_chip = f'<span class="winner-pill">{winner} wins</span>'
+
     return f"""
-<div class="rouge-card">
-  <div class="card-label">📈 ROUGE Scores</div>
-  <div style="display:flex;justify-content:flex-end;gap:16px;margin-bottom:6px">
-    <span style="font-size:0.7rem;font-weight:700;color:#60a5fa">BART</span>
-    <span style="font-size:0.7rem;font-weight:700;color:#fb923c">T5</span>
+<div class="rouge-panel">
+  <div class="card-label">Rouge Scores</div>
+  <table class="rouge-table">
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th class="col-bart">BART</th>
+        <th class="col-t5">T5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ROUGE-1</td>
+        <td class="val-bart">{r1b:.3f}</td>
+        <td class="val-t5">{r1t:.3f}</td>
+      </tr>
+      <tr>
+        <td>ROUGE-2</td>
+        <td class="val-bart">{r2b:.3f}</td>
+        <td class="val-t5">{r2t:.3f}</td>
+      </tr>
+      <tr>
+        <td>ROUGE-L</td>
+        <td class="val-bart">{rlb:.3f}</td>
+        <td class="val-t5">{rlt:.3f}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="rouge-avg-row">
+    <span class="rouge-avg-label">Average score</span>
+    {winner_chip}
   </div>
-  <div class="rouge-metric-row">
-    <span class="rouge-label">ROUGE-1</span>
-    <span>
-      <span class="rouge-val-bart">{r1b:.3f}</span>
-      <span style="color:#4b5563;margin:0 4px">|</span>
-      <span class="rouge-val-t5">{r1t:.3f}</span>
-    </span>
-  </div>
-  <div class="rouge-metric-row">
-    <span class="rouge-label">ROUGE-2</span>
-    <span>
-      <span class="rouge-val-bart">{r2b:.3f}</span>
-      <span style="color:#4b5563;margin:0 4px">|</span>
-      <span class="rouge-val-t5">{r2t:.3f}</span>
-    </span>
-  </div>
-  <div class="rouge-metric-row">
-    <span class="rouge-label">ROUGE-L</span>
-    <span>
-      <span class="rouge-val-bart">{rlb:.3f}</span>
-      <span style="color:#4b5563;margin:0 4px">|</span>
-      <span class="rouge-val-t5">{rlt:.3f}</span>
-    </span>
-  </div>
-  {winner_html}
 </div>
 """
+
 
 # ── Response Formatters ────────────────────────────────────────────────────────
 def fmt_greeting() -> str:
@@ -440,9 +629,9 @@ def fmt_article(article: dict) -> str:
     wc       = article.get("word_count", 0)
     preview  = article.get("preview", "")
     url_link = f"[View on Wikipedia]({url})" if url else ""
+    wc_badge = f"`{wc:,} words`"
     return (
-        f"✅ **Found: {title}** {url_link}\n\n"
-        f"📊 *Article has {wc:,} words*\n\n"
+        f"✅ **Found: {title}** {wc_badge}  {url_link}\n\n"
         f"**Preview:**\n> {preview}\n\n"
         f"---\n"
         f"💡 **You can now:**\n"
@@ -456,26 +645,25 @@ def fmt_qa(result: dict, question: str) -> str:
             f"🔍 I couldn't find a confident answer to: *\"{question}\"*\n\n"
             f"Try rephrasing your question, or ask about a different aspect of the article."
         )
-    answer   = result.get("answer", "")
-    score    = result.get("score_pct", 0)
-    bar_fill = "🟢" if score >= 70 else "🟡" if score >= 40 else "🔴"
+    answer = result.get("answer", "")
+    score  = result.get("score_pct", 0)
+    indicator = "🟢" if score >= 70 else "🟡" if score >= 40 else "🔴"
     return (
-        f"📌 **Answer:** {answer}\n\n"
-        f"{bar_fill} **Confidence:** {score}%\n\n"
-        f"*Source: {answer} — extracted from the loaded Wikipedia article*"
+        f"📌 **Answer:**\n> {answer}\n\n"
+        f"{indicator} **{score}%** · RoBERTa SQuAD2"
     )
 
 def fmt_summarization(summary_data: dict) -> str:
     bart_sum = summary_data.get("bart_summary", "N/A")
-    t5_sum   = summary_data.get("t5_summary", "N/A")
+    t5_sum   = summary_data.get("t5_summary",   "N/A")
     rouge    = summary_data.get("rouge_scores", {})
     winner   = summary_data.get("winner", "")
     bart_wc  = summary_data.get("bart_word_count", 0)
-    t5_wc    = summary_data.get("t5_word_count", 0)
+    t5_wc    = summary_data.get("t5_word_count",   0)
     bart_r   = rouge.get("bart", {})
-    t5_r     = rouge.get("t5", {})
+    t5_r     = rouge.get("t5",   {})
 
-    winner_line = f"\n\n🏆 **Winner: {winner}** — based on average ROUGE scores" if winner else ""
+    winner_line = f"\n\n🏆 **Winner: {winner}** — based on average ROUGE score" if winner else ""
 
     return (
         f"📝 **Summaries Generated!** Comparing BART vs T5:\n\n"
@@ -488,11 +676,10 @@ def fmt_summarization(summary_data: dict) -> str:
         f"---\n"
         f"**📊 ROUGE Evaluation:**\n\n"
         f"| Metric | BART | T5 |\n"
-        f"|--------|------|----|\n"
+        f"|--------|------|----||\n"
         f"| ROUGE-1 | `{bart_r.get('rouge1', 0):.3f}` | `{t5_r.get('rouge1', 0):.3f}` |\n"
         f"| ROUGE-2 | `{bart_r.get('rouge2', 0):.3f}` | `{t5_r.get('rouge2', 0):.3f}` |\n"
-        f"| ROUGE-L | `{bart_r.get('rougeL', 0):.3f}` | `{t5_r.get('rougeL', 0):.3f}` |\n"
-        f"| Words   | {bart_wc} | {t5_wc} |"
+        f"| ROUGE-L | `{bart_r.get('rougeL', 0):.3f}` | `{t5_r.get('rougeL', 0):.3f}` |"
         f"{winner_line}"
     )
 
@@ -504,6 +691,7 @@ def fmt_no_article() -> str:
         "- *\"Search for Albert Einstein\"*\n"
         "- *\"What is machine learning\"*"
     )
+
 
 # ── Core Chat Handler ─────────────────────────────────────────────────────────
 def chat_handler(message: str, history: list, session: SessionManager):
@@ -625,37 +813,37 @@ def build_ui():
         # ── State ──────────────────────────────────────────────────────────
         session_state = gr.State(SessionManager())
 
-        # ── Layout ─────────────────────────────────────────────────────────
+        # ── Top bar (full width) ───────────────────────────────────────────
+        gr.HTML(TOP_BAR_HTML)
+
+        # ── 3-column layout ────────────────────────────────────────────────
         with gr.Row(equal_height=False):
 
-            # ===== SIDEBAR =====
-            with gr.Column(scale=1, min_width=270, elem_id="sidebar"):
-                gr.HTML(LOGO_HTML)
+            # ===== LEFT SIDEBAR =====
+            with gr.Column(scale=1, min_width=230, elem_id="sidebar"):
                 topic_display  = gr.HTML(render_topic_card(""))
                 intent_display = gr.HTML(render_intent_card("—", 0))
-                gr.HTML('<hr class="divider">')
                 stats_display  = gr.HTML(render_stats_card(0, 0, 0))
-                rouge_display  = gr.HTML(render_rouge_card({}))
-                clear_btn = gr.Button("🗑️ Clear Chat", elem_classes=["clear-btn"])
+                clear_btn = gr.Button("🗑️  Clear Chat", elem_classes=["clear-btn"])
 
             # ===== MAIN CHAT AREA =====
             with gr.Column(scale=3, elem_id="main-area"):
-                gr.HTML("""
-<div class="wikiqa-header">
-  <h1>📖 Wikipedia QA Chatbot</h1>
-  <p>NLP Course Project</p>
-</div>
-""")
                 chatbot = gr.Chatbot(
                     value=[],
                     elem_id="chatbot",
                     height=480,
                     show_label=False,
-                    avatar_images=(None, "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Wikipedia-logo-v2.svg/103px-Wikipedia-logo-v2.svg.png"),
+                    avatar_images=(
+                        None,
+                        "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Wikipedia-logo-v2.svg/103px-Wikipedia-logo-v2.svg.png",
+                    ),
                 )
+                # Quick-pick chips
+                gr.HTML(CHIPS_HTML)
+                # Input row
                 with gr.Row():
                     user_input = gr.Textbox(
-                        placeholder='Try: "Tell me about Albert Einstein" or "Summarize it" or "When was he born?"',
+                        placeholder='Try: "Tell me about Albert Einstein" or "Summarize it"',
                         show_label=False,
                         lines=1,
                         max_lines=3,
@@ -664,22 +852,11 @@ def build_ui():
                     )
                     send_btn = gr.Button("Send ➤", elem_id="send-btn", scale=1, min_width=90)
 
-                # Example prompts
-                gr.Examples(
-                    examples=[
-                        ["Hello!"],
-                        ["Tell me about Albert Einstein"],
-                        ["When was Einstein born?"],
-                        ["Where was he born?"],
-                        ["Summarize it"],
-                        ["Tell me about Machine Learning"],
-                        ["What is deep learning?"],
-                        ["Summarize it"],
-                        ["Goodbye, thanks!"],
-                    ],
-                    inputs=user_input,
-                    label="💡 Try these examples",
-                )
+            # ===== RIGHT PANEL =====
+            with gr.Column(scale=1, min_width=220, elem_id="right-panel"):
+                rouge_display = gr.HTML(render_rouge_card({}))
+                gr.HTML(MODEL_INFO_HTML)
+                gr.HTML(HOW_TO_USE_HTML)
 
         # ── Events ─────────────────────────────────────────────────────────
         outputs = [
