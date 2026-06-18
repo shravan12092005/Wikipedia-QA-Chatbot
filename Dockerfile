@@ -28,6 +28,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy all application code
 COPY --chown=user:user . /app/
 
+# Ensure non-root user owns the app directory for runtime model training writes
+RUN chown -R user:user /app
+
 # Switch to home directory for model caching
 USER user
 
