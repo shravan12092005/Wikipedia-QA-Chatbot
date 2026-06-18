@@ -97,25 +97,45 @@ class IntentDetector:
 
     def _fallback_predict(self, text: str):
         """Keyword-based rule fallback (used if model not yet trained)."""
+        import re
         text_lower = text.lower().strip()
 
-        greeting_kw = ["hello", "hi", "hey", "good morning", "good evening",
-                       "howdy", "greetings", "sup", "hiya", "what's up"]
-        farewell_kw = ["bye", "goodbye", "see you", "farewell", "thanks",
-                       "thank you", "that's all", "done", "cheers", "ciao",
-                       "later", "signing off", "good night", "peace"]
+        # ── Topic-request phrases must be checked FIRST ──────────────────────
+        # This prevents "tell me about Rohit sharma" being mis-tagged as greeting
+        # because "sharma" contains "hi".
+        topic_phrases = [
+            "tell me about", "search for", "look up", "find info on",
+            "find information on", "i want to know about", "i'm curious about",
+            "give me information on", "search wikipedia for",
+            "what does wikipedia say about", "i want to learn about",
+            "can you look up", "who is", "who was", "what is", "what are",
+            "learn about", "info on", "information on", "tell me",
+        ]
+        if any(text_lower.startswith(ph) or ph in text_lower for ph in topic_phrases):
+            return "topic_request", 88.0
+
+        # ── Whole-word keyword matching (avoids "sharma" → "hi") ─────────────
+        def has_word(kw_list):
+            return any(re.search(r'\b' + re.escape(kw) + r'\b', text_lower)
+                       for kw in kw_list)
+
+        greeting_kw  = ["hello", "hi", "hey", "howdy", "greetings",
+                        "sup", "hiya", "good morning", "good evening", "what's up"]
+        farewell_kw  = ["bye", "goodbye", "see you", "farewell", "thanks",
+                        "thank you", "that's all", "cheers", "ciao",
+                        "later", "signing off", "good night", "peace"]
         summarize_kw = ["summarize", "summary", "tl;dr", "brief", "condense",
                         "overview", "gist", "shorten", "highlights", "abstract"]
         question_kw  = ["who", "what", "when", "where", "how", "which",
-                        "why", "is it", "does", "did", "was", "were"]
+                        "why", "does", "did", "was", "were"]
 
-        if any(kw in text_lower for kw in greeting_kw):
+        if has_word(greeting_kw):
             return "greeting", 90.0
-        if any(kw in text_lower for kw in farewell_kw):
+        if has_word(farewell_kw):
             return "farewell", 88.0
-        if any(kw in text_lower for kw in summarize_kw):
+        if has_word(summarize_kw):
             return "summarization", 85.0
-        if any(kw in text_lower for kw in question_kw):
+        if has_word(question_kw):
             return "question_answering", 80.0
         return "topic_request", 75.0
 

@@ -10,8 +10,15 @@ Functions:
 
 import re
 import html
-import wikipedia
+import requests
 import nltk
+
+# ── Optional: try the wikipedia library, but we don't depend on it ───────────
+try:
+    import wikipedia as _wikipedia_lib
+    _HAS_WIKIPEDIA_LIB = True
+except ImportError:
+    _HAS_WIKIPEDIA_LIB = False
 
 # Download NLTK data if needed (silent)
 try:
@@ -23,6 +30,14 @@ try:
     nltk.data.find("tokenizers/punkt_tab")
 except LookupError:
     nltk.download("punkt_tab", quiet=True)
+
+# ── Shared HTTP session with proper User-Agent ───────────────────────────────
+_SESSION = requests.Session()
+_SESSION.headers.update({
+    "User-Agent": "WikiQA-Chatbot/1.0 (NLP Course Project; Python/requests)"
+})
+
+_API_URL = "https://en.wikipedia.org/w/api.php"
 
 
 # ── Text Cleaning ────────────────────────────────────────────────────────────
@@ -52,6 +67,40 @@ def clean_text(raw: str) -> str:
     # 6. Strip
     text = text.strip()
     return text
+
+
+# ── Direct MediaWiki API helpers ─────────────────────────────────────────────
+def _api_search(topic: str, limit: int = 5) -> list[str]:
+    """Search Wikipedia via the MediaWiki API and return a list of page titles."""
+    resp = _SESSION.get(_API_URL, params={
+        "action": "query",
+        "list": "search",
+        "srsearch": topic,
+        "srlimit": limit,
+        "format": "json",
+    }, timeout=15)
+    resp.raise_for_status()
+    data = resp.json()
+    return [item["title"] for item in data.get("query", {}).get("search", [])]
+
+
+def _api_get_page(title: str) -> dict | None:
+    """Fetch full page content via the MediaWiki API. Returns dict or None."""
+    resp = _SESSION.get(_API_URL, params={
+        "action": "query",
+        "titles": title,
+        "prop": "extracts|info",
+        "explaintext": True,        # plain text, no HTML
+        "inprop": "url",
+        "format": "json",
+    }, timeout=30)
+    resp.raise_for_status()
+    pages = resp.json().get("query", {}).get("pages", {})
+    for pid, page_data in pages.items():
+        if pid == "-1":
+            return None
+        return page_data
+    return None
 
 
 # ── Wikipedia Fetch ───────────────────────────────────────────────────────────
@@ -84,51 +133,44 @@ def fetch_article(topic: str) -> dict:
         "error":        None,
     }
 
+    # Sanitize and limit topic length
+    topic = topic.strip()[:200]
+    if not topic:
+        result["error"] = "Topic cannot be empty."
+        return result
+
     try:
-        wikipedia.set_lang("en")
-
-        # Sanitize and limit topic length
-        topic = topic.strip()[:200]
-        if not topic:
-            result["error"] = "Topic cannot be empty."
-            return result
-
-        # Search for the topic
-        search_results = wikipedia.search(topic, results=5)
+        # ── Step 1: Search ────────────────────────────────────────────────
+        search_results = _api_search(topic)
         if not search_results:
             result["error"] = f"No Wikipedia articles found for: '{topic}'"
             return result
 
-        # Try each result until one loads without a disambiguation error
-        page = None
+        # ── Step 2: Fetch the first valid page ────────────────────────────
+        page_data = None
         for candidate in search_results:
-            try:
-                page = wikipedia.page(candidate, auto_suggest=False)
+            page_data = _api_get_page(candidate)
+            if page_data and page_data.get("extract"):
                 break
-            except wikipedia.exceptions.DisambiguationError as e:
-                # Take the first option from disambiguation
-                try:
-                    page = wikipedia.page(e.options[0], auto_suggest=False)
-                    break
-                except Exception as ex:
-                    print(f"[WikipediaFetcher] Warning: disambiguation fallback failed: {ex}")
-                    continue
-            except wikipedia.exceptions.PageError:
-                continue
+            page_data = None
 
-        if page is None:
+        if page_data is None:
             result["error"] = f"Could not load a Wikipedia page for: '{topic}'"
             return result
 
-        raw_text     = page.content
-        cleaned      = clean_text(raw_text)
-        sentences    = nltk.sent_tokenize(cleaned)
-        word_count   = len(cleaned.split())
-        preview      = cleaned[:400].rsplit(" ", 1)[0] + "…"
+        raw_text   = page_data.get("extract", "")
+        page_title = page_data.get("title", topic)
+        page_url   = page_data.get("fullurl",
+                                   f"https://en.wikipedia.org/wiki/{page_title.replace(' ', '_')}")
+
+        cleaned    = clean_text(raw_text)
+        sentences  = nltk.sent_tokenize(cleaned)
+        word_count = len(cleaned.split())
+        preview    = cleaned[:400].rsplit(" ", 1)[0] + "…" if len(cleaned) > 400 else cleaned
 
         result.update({
-            "title":        page.title,
-            "url":          page.url,
+            "title":        page_title,
+            "url":          page_url,
             "raw_text":     raw_text,
             "cleaned_text": cleaned,
             "word_count":   word_count,
@@ -136,6 +178,8 @@ def fetch_article(topic: str) -> dict:
             "preview":      preview,
         })
 
+    except requests.RequestException as e:
+        result["error"] = f"Network error fetching Wikipedia: {str(e)}"
     except Exception as e:
         result["error"] = f"Wikipedia fetch error: {str(e)}"
 
