@@ -1,3 +1,12 @@
+---
+title: Wikipedia QA API
+emoji: 📖
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+app_port: 7860
+---
+
 # 📖 Wikipedia AI Research Assistant & QA Chatbot
 ### NLP Course Project
 
