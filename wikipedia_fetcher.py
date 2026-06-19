@@ -34,7 +34,7 @@ except LookupError:
 # ── Shared HTTP session with proper User-Agent ───────────────────────────────
 _SESSION = requests.Session()
 _SESSION.headers.update({
-    "User-Agent": "WikiQA-Chatbot/1.0 (NLP Course Project; Python/requests)"
+    "User-Agent": "WikipediaQAChatbot/1.0 (https://wikipedia-qa-chatbot.vercel.app; shravan12092005@gmail.com) Python-requests/2.31.0"
 })
 
 _API_URL = "https://en.wikipedia.org/w/api.php"
